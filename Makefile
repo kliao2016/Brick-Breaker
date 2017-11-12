@@ -13,12 +13,12 @@ PROGNAME = BrickBreaker
 # that will be compiled into your program. For example
 # if you have main.c and myLib.c then in the following
 # line you would put main.o and myLib.o
-OFILES = main.o myLib.o font.o game.o
+OFILES = main.o myLib.o font.o game.o graphics.o
 
 # The header files you have created.
 # This is necessary to determine when to recompile for files.
 # This should be a space (SPACE!) separated list of .h files
-HFILES = game.h myLib.h
+HFILES = game.h myLib.h graphics.h
 
 ################################################################################
 # These are various settings used to make the GBA toolchain work

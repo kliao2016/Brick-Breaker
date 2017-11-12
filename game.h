@@ -1,7 +1,7 @@
 /* Game Structs */
 typedef struct {
-    const int height;
-    const int width;
+    int height;
+    int width;
     int row;
     int col;
     unsigned short color;
@@ -12,7 +12,9 @@ typedef enum {
     START,
     START_NODRAW,
     LEVEL1,
-    LEVEL1_NODRAW
+    LEVEL1_NODRAW,
+    GAME_OVER,
+    GAME_OVER_NO_DRAW
 
 } GAMEState;
 
@@ -44,4 +46,4 @@ void enableSlider(Slider *sldptr);
 void createBall(int row, int col, int size, Ball *ballptr);
 void startLevel(Ball *ballptr, Slider *sldptr);
 void handleCollisions(Ball *ballptr, Slider *sldptr);
-void generateBricks();
+void generateBricks(int numBricks);

@@ -130,4 +130,37 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
         ballptr->row = sldptr->row - ballptr->size;
         ballptr->yDir *= -1;
     }
+
+}
+
+/**
+ * Function to generate bricks on the level
+ *
+ * @param bricks the list of bricks to generate
+ */
+void generateBricks(int numBricks) {
+    u16 colors[] = {RED, GREEN, BLUE, YELLOW, WHITE};
+    int numcolors = sizeof(colors)/sizeof(colors[0]);
+    Brick brick;
+    Brick *brptr = &brick;
+    int row = 30;
+    int col = 45;
+
+    for (int i = 0; i < numBricks; i++) {
+        u16 color = colors[i % numcolors];
+        brptr->row = row;
+        brptr->col = col;
+        brptr->height = 10;
+        brptr->width = 30;
+        brptr->color = color;
+        if ((i + 1) % 3 == 0) {
+            row += brptr->height;
+        }
+        drawRect(brptr->row, brptr->col,
+                    brptr->height,
+                    brptr->width,
+                    color);
+        col = col + 30 + (brptr->width);
+
+    }
 }

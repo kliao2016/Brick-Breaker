@@ -80,6 +80,7 @@ typedef struct
 
 extern unsigned short *videoBuffer;
 extern const unsigned char fontdata_6x8[12288];
+extern const unsigned short start_screen[38400];
 
 /* Prototypes */
 void setPixel(int row, int col, unsigned short color);
