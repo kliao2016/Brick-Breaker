@@ -26,4 +26,11 @@ extern const unsigned short slider_image[200];
 #define SLIDER_WIDTH 40
 #define SLIDER_HEIGHT 5
 
+// Game over image
+extern const unsigned short game_over[38400];
+#define GAME_OVER_SIZE 76800
+#define GAME_OVER_LENGTH 38400
+#define GAME_OVER_WIDTH 240
+#define GAME_OVER_HEIGHT 160
+
 #endif
