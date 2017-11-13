@@ -100,7 +100,7 @@ int main() {
 
         case GAME_OVER_NO_DRAW:
             if (!enterPressed && KEY_DOWN_NOW(BUTTON_START)) {
-                state = START;
+                resetGame();
                 enterPressed = 1;
             }
             backToMain();
