@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "myLib.h"
 #include "game.h"
+#include "graphics.h"
 
 /**
  * Function to draw the slider on every screen
@@ -8,13 +9,13 @@
  * @param sldptr the pointer to the slider to be drawn
  */
 void drawSlider(Slider *sldptr) {
-    sldptr->height = SLIDERHEIGHT;
-    sldptr->width = SLIDERWIDTH;
+    sldptr->height = SLIDER_HEIGHT;
+    sldptr->width = SLIDER_WIDTH;
     sldptr->row = SCREENHEIGHT - 15 - sldptr->height;
     sldptr->col = (SCREENWIDTH / 2) - 1 - (sldptr->width / 2);
     sldptr->oldRow = sldptr->row;
     sldptr->oldCol = sldptr->col;
-    drawRect(sldptr->row, sldptr->col, sldptr->height, sldptr->width, YELLOW);
+    drawImage3(sldptr->row, sldptr->col, sldptr->height, sldptr->width, slider_image);
 }
 
 /**
@@ -40,7 +41,7 @@ void enableSlider(Slider *sldptr) {
         if (sldptr->col + width > SCREENWIDTH) {
             sldptr->col = SCREENWIDTH - width;
         }
-        drawRect(sldptr->row, sldptr->col, height, width, YELLOW);
+        drawImage3(sldptr->row, sldptr->col, sldptr->height, sldptr->width, slider_image);
     }
 
     if (KEY_DOWN_NOW(BUTTON_LEFT)) {
@@ -56,7 +57,7 @@ void enableSlider(Slider *sldptr) {
         if (sldptr->col < 0) {
             sldptr->col = 0;
         }
-        drawRect(sldptr->row, sldptr->col, height, width, YELLOW);
+        drawImage3(sldptr->row, sldptr->col, sldptr->height, sldptr->width, slider_image);
     }
 }
 
@@ -128,11 +129,11 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
     // Collision resolution for when bottom of ball hits top of slider
     if ((ballptr->row + BALLSIZE) > sldptr->row
             && ballptr->col >= (sldptr->col - BALLSIZE)
-            && ballptr->col <= (sldptr->col + SLIDERWIDTH)) {
+            && ballptr->col <= (sldptr->col + SLIDER_WIDTH)) {
         ballptr->row = sldptr->row - BALLSIZE;
         ballptr->yDir *= -1;
-        ballptr->xDir = (rand() % 2 + 1) * ballptr->xDir / abs(ballptr->xDir);
-        ballptr->yDir = (rand() % 2 + 1) * ballptr->yDir / abs(ballptr->yDir);
+        // ballptr->xDir = (rand() % 2 + 1) * ballptr->xDir / abs(ballptr->xDir);
+        // ballptr->yDir = (rand() % 2 + 1) * ballptr->yDir / abs(ballptr->yDir);
     }
 
 }

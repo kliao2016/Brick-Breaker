@@ -47,7 +47,7 @@ int main() {
 
         case LEVEL_NODRAW:
             // Collision resolution for when ball hits bottom of screen
-            if (ballptr->row + BALLSIZE >= sldptr->row + SLIDERHEIGHT) {
+            if (ballptr->row + BALLSIZE >= sldptr->row + SLIDER_HEIGHT) {
                 lives -= 1;
                 if (lives > 0) {
                     state = LOSE_LIFE;
@@ -151,7 +151,7 @@ void setGameStage() {
     fillScreen(BGCOLOR);
     updateScreenText();
     drawSlider(sldptr);
-    createBall(sldptr->row - 5, sldptr->col + (SLIDERWIDTH / 2), BALLSIZE, ballptr);
+    createBall(sldptr->row - 5, sldptr->col + (SLIDER_WIDTH / 2), BALLSIZE, ballptr);
     numBricks = level * 3;
     bricksSize = level * 3;
     generateBricks(brptr, bricksSize);
