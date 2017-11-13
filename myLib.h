@@ -7,7 +7,13 @@ typedef unsigned short u16;
 
 #define SCANLINECOUNTER *(volatile unsigned short *)0x4000006
 
-#define SCREENHEIGHT 149
+#define SCREENHEIGHT 160
+#define SCREENWIDTH 240
+#define SLIDERHEIGHT 5
+#define SLIDERWIDTH 45
+#define BRICKHEIGHT 10
+#define BRICKWIDTH 30
+#define BALLSIZE 5
 
 #define BG2_ENABLE (1<<10)
 #define COLOR(r, g, b) ((r) | (g)<<5 | (b)<<10)
@@ -18,6 +24,7 @@ typedef unsigned short u16;
 #define WHITE COLOR(31,31,31)
 #define BLACK 0
 #define DKGRAY COLOR(15, 15, 15)
+#define BGCOLOR 0
 
 
 #define OFFSET(row, col, rowlen)  ((row)*(rowlen)+(col))

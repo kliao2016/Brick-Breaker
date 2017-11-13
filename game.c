@@ -7,13 +7,12 @@
  * @param sldptr the pointer to the slider to be drawn
  */
 void drawSlider(Slider *sldptr) {
-    sldptr->height = 5;
-    sldptr->width = 50;
-    sldptr->row = 159 - sldptr->height;
-    sldptr->col = 119 - (sldptr->width / 2);
+    sldptr->height = SLIDERHEIGHT;
+    sldptr->width = SLIDERWIDTH;
+    sldptr->row = SCREENHEIGHT - 1 - sldptr->height;
+    sldptr->col = (SCREENWIDTH / 2) - 1 - (sldptr->width / 2);
     sldptr->oldRow = sldptr->row;
     sldptr->oldCol = sldptr->col;
-    fillScreen(BLACK);
     drawRect(sldptr->row, sldptr->col, sldptr->height, sldptr->width, YELLOW);
 }
 
@@ -32,15 +31,14 @@ void enableSlider(Slider *sldptr) {
         int width = sldptr->width;
 
         // Erase previous slider position
-        drawRect(sldptr->oldRow, sldptr->oldCol, height, width, BLACK);
+        drawRect(sldptr->oldRow, sldptr->oldCol, height, width, BGCOLOR);
         sldptr->oldRow = sldptr->row;
         sldptr->oldCol = sldptr->col;
 
         sldptr->col = sldptr->col + cdel;
-        if (sldptr->col + width > 240) {
-            sldptr->col = 240 - width;
+        if (sldptr->col + width > SCREENWIDTH) {
+            sldptr->col = SCREENWIDTH - width;
         }
-        //drawRect(oldrow, oldcol, height, width, BLACK);
         drawRect(sldptr->row, sldptr->col, height, width, YELLOW);
     }
 
@@ -49,7 +47,7 @@ void enableSlider(Slider *sldptr) {
         int width = sldptr->width;
 
         // Erase previous slider position
-        drawRect(sldptr->oldRow, sldptr->oldCol, height, width, BLACK);
+        drawRect(sldptr->oldRow, sldptr->oldCol, height, width, BGCOLOR);
         sldptr->oldRow = sldptr->row;
         sldptr->oldCol = sldptr->col;
 
@@ -57,7 +55,6 @@ void enableSlider(Slider *sldptr) {
         if (sldptr->col < 0) {
             sldptr->col = 0;
         }
-        //drawRect(sldptr->oldRow, sldptr->oldCol, height, width, BLACK);
         drawRect(sldptr->row, sldptr->col, height, width, YELLOW);
     }
 }
@@ -86,17 +83,22 @@ void createBall(int row, int col, int size, Ball *ballptr) {
  *
  * @param ballptr the pointer to the ball to move
  * @param sldptr the pointer to the slider of the level
+ * @param brptr the pointer to the array of bricks in the game
+ * @param numBricks the pointer to the number of bricks in the game
+ * @param bricksSize the size of the array of bricks
  */
-void startLevel(Ball *ballptr, Slider *sldptr) {
-    drawRect(ballptr->oldRow, ballptr->oldCol, ballptr->size, ballptr->size, BLACK);
+void ballMovement(Ball *ballptr, Slider *sldptr, Brick *brptr, int *numBricks, int bricksSize) {
+    drawRect(ballptr->oldRow, ballptr->oldCol, ballptr->size, ballptr->size, BGCOLOR);
     ballptr->col += ballptr->xDir;
     ballptr->row += ballptr->yDir;
 
     handleCollisions(ballptr, sldptr);
+    handleBrickCollisions(brptr, ballptr, numBricks, bricksSize);
 
     ballptr->oldRow = ballptr->row;
     ballptr->oldCol = ballptr->col;
     drawRect(ballptr->row, ballptr->col, ballptr->size, ballptr->size, WHITE);
+
 }
 
 /**
@@ -106,15 +108,14 @@ void startLevel(Ball *ballptr, Slider *sldptr) {
  * @param sldptr the pointer to the slider of the game
  */
 void handleCollisions(Ball *ballptr, Slider *sldptr) {
-    int size = ballptr->size;
 
     if (ballptr->col < 0) {
         ballptr->col = 0;
         ballptr->xDir *= -1;
     }
 
-    if (ballptr->col + size > 240) {
-        ballptr->col = 240 - size;
+    if (ballptr->col + BALLSIZE > SCREENWIDTH) {
+        ballptr->col = SCREENWIDTH - BALLSIZE;
         ballptr->xDir *= -1;
     }
 
@@ -124,10 +125,10 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
     }
 
     // Collision resolution for when bottom of ball hits top of slider
-    if ((ballptr->row + size) > sldptr->row
-            && ballptr->col >= sldptr->col
-            && (ballptr->col + size) <= (sldptr->col + sldptr->width)) {
-        ballptr->row = sldptr->row - ballptr->size;
+    if ((ballptr->row + BALLSIZE) > sldptr->row
+            && ballptr->col >= (sldptr->col - BALLSIZE)
+            && ballptr->col <= (sldptr->col + SLIDERWIDTH)) {
+        ballptr->row = sldptr->row - BALLSIZE;
         ballptr->yDir *= -1;
     }
 
@@ -136,31 +137,65 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
 /**
  * Function to generate bricks on the level
  *
- * @param bricks the list of bricks to generate
+ * @param brptr the pointer to the first brick of the array of bricks
+ * @param numBricks the number of bricks on the screen
  */
-void generateBricks(int numBricks) {
+void generateBricks(Brick *brptr, int numBricks) {
     u16 colors[] = {RED, GREEN, BLUE, YELLOW, WHITE};
     int numcolors = sizeof(colors)/sizeof(colors[0]);
-    Brick brick;
-    Brick *brptr = &brick;
-    int row = 30;
+    int row = 25;
     int col = 45;
-
     for (int i = 0; i < numBricks; i++) {
+        Brick *cur = brptr + i;
         u16 color = colors[i % numcolors];
-        brptr->row = row;
-        brptr->col = col;
-        brptr->height = 10;
-        brptr->width = 30;
-        brptr->color = color;
+        cur->row = row;
+        cur->col = col;
+        cur->height = BRICKHEIGHT;
+        cur->width = BRICKWIDTH;
+        cur->color = color;
+        cur->isHit = 0;
+        col = col + 30 + (cur->width);
         if ((i + 1) % 3 == 0) {
-            row += brptr->height;
+            row += BRICKHEIGHT + 3;
+            col = 45;
         }
-        drawRect(brptr->row, brptr->col,
-                    brptr->height,
-                    brptr->width,
-                    color);
-        col = col + 30 + (brptr->width);
-
     }
+}
+
+/**
+ * Function to handle ball collision with a brick
+ *
+ * @param brptr the pointer to the brick
+ * @param ballptr the pointer to the ball
+ * @param numBricks the pointer to the number of bricks to generate
+ * @param bricksSize the number of bricks in the array
+ */
+void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bricksSize) {
+
+    for (int i = 0; i < bricksSize; i++) {
+        Brick *cur = brptr + i;
+        if (cur->isHit) {
+            drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, BGCOLOR);
+        } else {
+            if (((ballptr->col == (cur->col + BRICKWIDTH))
+                    || ((ballptr->col + BALLSIZE) == cur->col))
+                    && ((ballptr->row <= (cur->row + BRICKHEIGHT))
+                    && (ballptr->row >= (cur->row - BALLSIZE)))) {
+                *(numBricks) -= 1;
+                cur->isHit = 1;
+                ballptr->xDir *= -1;
+                ballptr->col += ballptr->xDir;
+            } else if ((((ballptr->row + BALLSIZE) == brptr->row)
+                        || (ballptr->row == (brptr->row + BRICKHEIGHT)))
+                        && ((ballptr->col >= (cur->col - BALLSIZE))
+                        && (ballptr->col <= (cur->col + BRICKWIDTH)))) {
+                *(numBricks) -= 1;
+                cur->isHit = 1;
+                ballptr->yDir *= -1;
+                ballptr->row += ballptr->yDir;
+            }
+            drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, cur->color);
+        }
+    }
+
 }

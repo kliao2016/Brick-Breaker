@@ -4,6 +4,7 @@ typedef struct {
     int width;
     int row;
     int col;
+    int isHit;
     unsigned short color;
 
 } Brick;
@@ -11,8 +12,8 @@ typedef struct {
 typedef enum {
     START,
     START_NODRAW,
-    LEVEL1,
-    LEVEL1_NODRAW,
+    LEVEL,
+    LEVEL_NODRAW,
     GAME_OVER,
     GAME_OVER_NO_DRAW
 
@@ -44,6 +45,7 @@ typedef struct {
 void drawSlider(Slider *sldptr);
 void enableSlider(Slider *sldptr);
 void createBall(int row, int col, int size, Ball *ballptr);
-void startLevel(Ball *ballptr, Slider *sldptr);
+void ballMovement(Ball *ballptr, Slider *sldptr, Brick *brptr, int *numBricks, int bricksSize);
 void handleCollisions(Ball *ballptr, Slider *sldptr);
-void generateBricks(int numBricks);
+void generateBricks(Brick *brptr, int numBricks);
+void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bricksSize);
