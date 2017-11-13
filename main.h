@@ -13,3 +13,4 @@ void gameWon();
 void resetGame();
 void setUpNextLevel();
 void updateScreenText();
+void backToMain();

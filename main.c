@@ -16,13 +16,13 @@ int bricksSize;
 int level = INITIAL_LEVEL;
 int lives = INITIAL_LIVES;
 char textBuffer[75];
+int enterPressed = 0;
+int zPressed = 0;
+int backPressed = 0;
 
 int main() {
     // Enable GBA Mode3
     REG_DISPCTL = MODE3 | BG2_ENABLE;
-
-    int enterPressed = 0;
-    int aPressed = 0;
 
     // Game Loop
     while(1) {
@@ -64,6 +64,7 @@ int main() {
                     state = WIN_GAME;
                 }
             }
+            backToMain();
             break;
 
         case NEXT_LEVEL:
@@ -76,6 +77,7 @@ int main() {
                 state = LEVEL;
                 enterPressed = 1;
             }
+            backToMain();
             break;
 
         case LOSE_LIFE:
@@ -84,10 +86,11 @@ int main() {
             break;
 
         case LOSE_LIFE_NO_DRAW:
-            if (!aPressed && KEY_DOWN_NOW(BUTTON_A)) {
+            if (!zPressed && KEY_DOWN_NOW(BUTTON_A)) {
                 state = LEVEL;
                 enterPressed = 1;
             }
+            backToMain();
             break;
 
         case GAME_OVER:
@@ -100,6 +103,7 @@ int main() {
                 state = START;
                 enterPressed = 1;
             }
+            backToMain();
             break;
 
         case WIN_GAME:
@@ -112,6 +116,7 @@ int main() {
                 resetGame();
                 enterPressed = 1;
             }
+            backToMain();
             break;
         }
 
@@ -119,7 +124,10 @@ int main() {
             enterPressed = 0;
         }
         if (!KEY_DOWN_NOW(BUTTON_A)) {
-            aPressed = 0;
+            zPressed = 0;
+        }
+        if (!KEY_DOWN_NOW(BUTTON_SELECT)) {
+            backPressed = 0;
         }
     }
 
@@ -210,4 +218,14 @@ void updateScreenText() {
     drawString3(SCREENHEIGHT - 10, 5, textBuffer, GREEN);
     sprintf(textBuffer, "LIVES: %d", lives);
     drawString3(SCREENHEIGHT - 10, SCREENWIDTH - sizeof(textBuffer) + 20, textBuffer, GREEN);
+}
+
+/**
+ * Function to go back to start screen
+ */
+void backToMain() {
+    if (!backPressed && KEY_DOWN_NOW(BUTTON_SELECT)) {
+        state = START;
+        backPressed = 1;
+    }
 }
