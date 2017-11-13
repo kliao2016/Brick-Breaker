@@ -188,7 +188,7 @@ void tryAgain() {
  */
 void gameWon() {
     fillScreen(BGCOLOR);
-    drawString3(70, 56, "CONGRATULATIONS, YOU WON!", GREEN);
+    drawString3(70, 50, "CONGRATULATIONS, YOU WON!", GREEN);
     drawString3(79, 53, "PRESS ENTER TO PLAY AGAIN", GREEN);
 }
 

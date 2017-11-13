@@ -189,7 +189,8 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 *(numBricks) -= 1;
                 cur->isHit = 1;
                 ballptr->xDir *= -1;
-                ballptr->col = ballptr->col + (ballptr->xDir * 3);
+                //ballptr->xDir = ballptr->xDir * ((*(numBricks) % 2) + 1);
+                ballptr->col = ballptr->col + (ballptr->xDir * 2);
             } else if ((((ballptr->row + BALLSIZE) == brptr->row)
                         || (ballptr->row == (cur->row + BRICKHEIGHT)))
                         && ((ballptr->col >= (cur->col - BALLSIZE))
@@ -197,7 +198,8 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 *(numBricks) -= 1;
                 cur->isHit = 1;
                 ballptr->yDir *= -1;
-                ballptr->row = ballptr->row + (ballptr->yDir * 3);
+                //ballptr->yDir = ballptr->yDir * ((*(numBricks) % 2) + 1);
+                ballptr->row = ballptr->row + (ballptr->yDir * 2);
             }
             drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, cur->color);
         }
