@@ -47,7 +47,7 @@ int main() {
 
         case LEVEL_NODRAW:
             // Collision resolution for when ball hits bottom of screen
-            if (ballptr->row + BALLSIZE >= SCREENHEIGHT) {
+            if (ballptr->row + BALLSIZE >= sldptr->row + SLIDERHEIGHT) {
                 lives -= 1;
                 if (lives > 0) {
                     state = LOSE_LIFE;
