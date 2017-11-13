@@ -52,7 +52,7 @@ void drawImage3(int row, int col, int height, int width, const u16* image) {
  */
 void waitForVblank() {
 	while(SCANLINECOUNTER > 160);
-	while(SCANLINECOUNTER < 161);
+	while(SCANLINECOUNTER < 160);
 }
 
 /**
