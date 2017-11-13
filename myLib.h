@@ -18,9 +18,11 @@ typedef unsigned short u16;
 #define BG2_ENABLE (1<<10)
 #define COLOR(r, g, b) ((r) | (g)<<5 | (b)<<10)
 #define RED COLOR(31, 0, 0)
+#define CYAN COLOR(0, 31, 31)
 #define GREEN COLOR(0, 31, 0)
 #define BLUE COLOR(0,0,31)
 #define YELLOW COLOR(31,31,0)
+#define MAGENTA COLOR(31, 0, 31)
 #define WHITE COLOR(31,31,31)
 #define BLACK 0
 #define DKGRAY COLOR(15, 15, 15)

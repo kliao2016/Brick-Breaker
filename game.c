@@ -150,13 +150,13 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
  * @param numBricks the number of bricks on the screen
  */
 void generateBricks(Brick *brptr, int numBricks) {
-    u16 colors[] = {RED, GREEN, BLUE, YELLOW, WHITE};
+    u16 colors[] = {RED, DKGRAY, GREEN, BLUE, MAGENTA, YELLOW, WHITE};
     int numcolors = sizeof(colors)/sizeof(colors[0]);
     int row = 25;
     int col = 45;
     for (int i = 0; i < numBricks; i++) {
         Brick *cur = brptr + i;
-        u16 color = colors[i % numcolors];
+        u16 color = colors[rand() % numcolors];
         cur->row = row;
         cur->col = col;
         cur->height = BRICKHEIGHT;
