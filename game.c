@@ -9,7 +9,7 @@
 void drawSlider(Slider *sldptr) {
     sldptr->height = SLIDERHEIGHT;
     sldptr->width = SLIDERWIDTH;
-    sldptr->row = SCREENHEIGHT - 1 - sldptr->height;
+    sldptr->row = SCREENHEIGHT - 15 - sldptr->height;
     sldptr->col = (SCREENWIDTH / 2) - 1 - (sldptr->width / 2);
     sldptr->oldRow = sldptr->row;
     sldptr->oldCol = sldptr->col;
@@ -114,14 +114,14 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
         ballptr->xDir *= -1;
     }
 
-    if (ballptr->col + BALLSIZE > SCREENWIDTH) {
-        ballptr->col = SCREENWIDTH - BALLSIZE;
-        ballptr->xDir *= -1;
-    }
-
     if (ballptr->row < 0) {
         ballptr->row = 0;
         ballptr->yDir *= -1;
+    }
+
+    if (ballptr->col + BALLSIZE > SCREENWIDTH) {
+        ballptr->col = SCREENWIDTH - BALLSIZE;
+        ballptr->xDir *= -1;
     }
 
     // Collision resolution for when bottom of ball hits top of slider
@@ -184,7 +184,7 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 *(numBricks) -= 1;
                 cur->isHit = 1;
                 ballptr->xDir *= -1;
-                ballptr->col += ballptr->xDir;
+                ballptr->col += (ballptr->xDir * 3);
             } else if ((((ballptr->row + BALLSIZE) == brptr->row)
                         || (ballptr->row == (brptr->row + BRICKHEIGHT)))
                         && ((ballptr->col >= (cur->col - BALLSIZE))
@@ -192,7 +192,7 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 *(numBricks) -= 1;
                 cur->isHit = 1;
                 ballptr->yDir *= -1;
-                ballptr->row += ballptr->yDir;
+                ballptr->row += (ballptr->yDir * 3);
             }
             drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, cur->color);
         }

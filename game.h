@@ -14,8 +14,14 @@ typedef enum {
     START_NODRAW,
     LEVEL,
     LEVEL_NODRAW,
+    NEXT_LEVEL,
+    NEXT_LEVEL_NO_DRAW,
+    LOSE_LIFE,
+    LOSE_LIFE_NO_DRAW,
     GAME_OVER,
-    GAME_OVER_NO_DRAW
+    GAME_OVER_NO_DRAW,
+    WIN_GAME,
+    WIN_GAME_NO_DRAW,
 
 } GAMEState;
 

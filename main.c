@@ -13,14 +13,16 @@ Brick bricks[18];
 Brick *brptr = bricks;
 int numBricks;
 int bricksSize;
-int level = 1;
-int lives = 3;
+int level = INITIAL_LEVEL;
+int lives = INITIAL_LIVES;
+char textBuffer[75];
 
 int main() {
     // Enable GBA Mode3
     REG_DISPCTL = MODE3 | BG2_ENABLE;
 
     int enterPressed = 0;
+    int aPressed = 0;
 
     // Game Loop
     while(1) {
@@ -44,25 +46,52 @@ int main() {
             break;
 
         case LEVEL_NODRAW:
-            startLevel();
             // Collision resolution for when ball hits bottom of screen
-            if ((ballptr->row + BALLSIZE) >= SCREENHEIGHT) {
+            if (ballptr->row + BALLSIZE >= SCREENHEIGHT) {
                 lives -= 1;
-                if (lives == 0) {
+                if (lives > 0) {
+                    state = LOSE_LIFE;
+                } else {
                     state = GAME_OVER;
                 }
             }
+            startLevel();
             if (numBricks <= 0) {
                 if (level < MAXLEVEL) {
                     level++;
-                    state = LEVEL;
+                    state = NEXT_LEVEL;
+                } else {
+                    state = WIN_GAME;
                 }
             }
             break;
 
+        case NEXT_LEVEL:
+            setUpNextLevel();
+            state = NEXT_LEVEL_NO_DRAW;
+            break;
+
+        case NEXT_LEVEL_NO_DRAW:
+            if (!enterPressed && KEY_DOWN_NOW(BUTTON_START)) {
+                state = LEVEL;
+                enterPressed = 1;
+            }
+            break;
+
+        case LOSE_LIFE:
+            tryAgain();
+            state = LOSE_LIFE_NO_DRAW;
+            break;
+
+        case LOSE_LIFE_NO_DRAW:
+            if (!aPressed && KEY_DOWN_NOW(BUTTON_A)) {
+                state = LEVEL;
+                enterPressed = 1;
+            }
+            break;
+
         case GAME_OVER:
-            fillScreen(BGCOLOR);
-            drawString3(79, 90, "GAME OVER", YELLOW);
+            gameOver();
             state = GAME_OVER_NO_DRAW;
             break;
 
@@ -72,10 +101,25 @@ int main() {
                 enterPressed = 1;
             }
             break;
+
+        case WIN_GAME:
+            gameWon();
+            state = WIN_GAME_NO_DRAW;
+            break;
+
+        case WIN_GAME_NO_DRAW:
+            if (!enterPressed && KEY_DOWN_NOW(BUTTON_START)) {
+                resetGame();
+                enterPressed = 1;
+            }
+            break;
         }
 
         if (!KEY_DOWN_NOW(BUTTON_START)) {
             enterPressed = 0;
+        }
+        if (!KEY_DOWN_NOW(BUTTON_A)) {
+            aPressed = 0;
         }
     }
 
@@ -97,7 +141,7 @@ void startScreen() {
  */
 void setGameStage() {
     fillScreen(BGCOLOR);
-    drawString3(5, 5, "Level 1", GREEN);
+    updateScreenText();
     drawSlider(sldptr);
     createBall(sldptr->row - 5, sldptr->col + (SLIDERWIDTH / 2), BALLSIZE, ballptr);
     numBricks = level * 3;
@@ -111,4 +155,59 @@ void setGameStage() {
 void startLevel() {
     enableSlider(sldptr);
     ballMovement(ballptr, sldptr, brptr, &numBricks, bricksSize);
+}
+
+/**
+ * Function to notify player that the game has ended and they lost
+ */
+void gameOver() {
+    fillScreen(BGCOLOR);
+    drawString3(70, 99, "GAME OVER.", RED);
+    drawString3(79, 50, "PRESS ENTER TO PLAY AGAIN", RED);
+}
+
+/**
+ * Function to notify that the player has lost a life
+ */
+void tryAgain() {
+    fillScreen(BGCOLOR);
+    drawString3(70, 67, "YOU LOST A LIFE.", RED);
+    drawString3(79, 60, "HIT Z TO TRY AGAIN", RED);
+}
+
+/**
+ * Function to notify that the player has won the game
+ */
+void gameWon() {
+    fillScreen(BGCOLOR);
+    drawString3(70, 56, "CONGRATULATIONS, YOU WON!", GREEN);
+    drawString3(79, 53, "PRESS ENTER TO PLAY AGAIN", GREEN);
+}
+
+/**
+ * Function to reset the game
+ */
+void resetGame() {
+    level = INITIAL_LEVEL;
+    lives = INITIAL_LIVES;
+    state = START;
+}
+
+/**
+ * Function to notify player that they made it to the next level
+ */
+void setUpNextLevel() {
+    fillScreen(BGCOLOR);
+    sprintf(textBuffer, "LEVEL %d. PRESS ENTER TO START", level);
+    drawString3(79, 36, textBuffer, YELLOW);
+}
+
+/**
+ * Function to update text on the screen
+ */
+void updateScreenText() {
+    sprintf(textBuffer, "LEVEL %d", level);
+    drawString3(SCREENHEIGHT - 10, 5, textBuffer, GREEN);
+    sprintf(textBuffer, "LIVES: %d", lives);
+    drawString3(SCREENHEIGHT - 10, SCREENWIDTH - sizeof(textBuffer) + 20, textBuffer, GREEN);
 }
