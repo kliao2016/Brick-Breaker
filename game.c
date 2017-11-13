@@ -132,8 +132,11 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
             && ballptr->col <= (sldptr->col + SLIDER_WIDTH)) {
         ballptr->row = sldptr->row - BALLSIZE;
         ballptr->yDir *= -1;
-        // ballptr->xDir = (rand() % 2 + 1) * ballptr->xDir / abs(ballptr->xDir);
-        // ballptr->yDir = (rand() % 2 + 1) * ballptr->yDir / abs(ballptr->yDir);
+        int dirFactor = (rand() % 3) - 1;
+        if (dirFactor != 0) {
+            ballptr->xDir = ballptr->xDir * dirFactor;
+            ballptr->yDir = ballptr->yDir * dirFactor;
+        }
     }
 
 }
