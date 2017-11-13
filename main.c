@@ -170,8 +170,8 @@ void startLevel() {
  */
 void gameOver() {
     drawImage3(0, 0, GAME_OVER_HEIGHT, GAME_OVER_WIDTH, game_over);
-    drawString3(70, 99, "GAME OVER :(", RED);
-    drawString3(79, 50, "PRESS ENTER TO PLAY AGAIN", RED);
+    drawString3(140, 130, "GAME OVER :(", RED);
+    drawString3(149, 85, "PRESS ENTER TO PLAY AGAIN", RED);
 }
 
 /**
