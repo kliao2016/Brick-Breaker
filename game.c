@@ -110,12 +110,6 @@ void ballMovement(Ball *ballptr, Slider *sldptr, Brick *brptr, int *numBricks, i
  */
 void handleCollisions(Ball *ballptr, Slider *sldptr) {
 
-    // int seed = 0;
-    // while (!KEY_DOWN_NOW(BUTTON_RIGHT)) {
-    //     seed++;
-    // }
-    // srand(seed);
-
     if (ballptr->col < 0) {
         ballptr->col = 0;
         ballptr->xDir *= -1;
@@ -181,12 +175,6 @@ void generateBricks(Brick *brptr, int numBricks) {
  */
 void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bricksSize) {
 
-    // int seed = 0;
-    // while (!KEY_DOWN_NOW(BUTTON_RIGHT)) {
-    //     seed++;
-    // }
-    // srand(seed);
-
     for (int i = 0; i < bricksSize; i++) {
         Brick *cur = brptr + i;
         if (cur->isHit) {
@@ -204,8 +192,6 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 *(numBricks) -= 1;
                 cur->isHit = 1;
                 ballptr->xDir *= -1;
-                //ballptr->xDir = ballptr->xDir * ((*(numBricks) % 2) + 1);
-                ballptr->col = ballptr->col + (ballptr->xDir * 1);
             } else if ((((ballptr->row + BALLSIZE) == cur->row)
                         || (ballptr->row == (cur->row + BRICKHEIGHT)))
                         && ((ballptr->col >= (cur->col - BALLSIZE))
@@ -213,8 +199,6 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 *(numBricks) -= 1;
                 cur->isHit = 1;
                 ballptr->yDir *= -1;
-                //ballptr->yDir = ballptr->yDir * ((*(numBricks) % 2) + 1);
-                ballptr->row = ballptr->row + (ballptr->yDir * 1);
             }
             drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, cur->color);
         }
