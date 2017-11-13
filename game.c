@@ -191,7 +191,7 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 ballptr->xDir *= -1;
                 ballptr->col = ballptr->col + (ballptr->xDir * 5);
             } else if ((((ballptr->row + BALLSIZE) == brptr->row)
-                        || (ballptr->row == (brptr->row + BRICKHEIGHT)))
+                        || (ballptr->row == (cur->row + BRICKHEIGHT)))
                         && ((ballptr->col >= (cur->col - BALLSIZE))
                         && (ballptr->col <= (cur->col + BRICKWIDTH)))) {
                 *(numBricks) -= 1;
