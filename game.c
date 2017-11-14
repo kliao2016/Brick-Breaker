@@ -199,6 +199,9 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
 
     for (int i = 0; i < bricksSize; i++) {
         Brick *cur = brptr + i;
+        if (cur->row == 0 || cur->col == 0) {
+            continue;
+        }
         if (cur->isHit) {
             drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, BGCOLOR);
             for (int j = i; j < bricksSize; j++) {
