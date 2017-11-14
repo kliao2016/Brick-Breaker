@@ -1,5 +1,5 @@
 /* Defines */
-#define MAXLEVEL 3
+#define MAXLEVEL 4
 #define INITIAL_LEVEL 1
 #define INITIAL_LIVES 3
 

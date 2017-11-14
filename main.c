@@ -9,7 +9,7 @@ Slider slider;
 Slider *sldptr = &slider;
 Ball ball;
 Ball *ballptr = &ball;
-Brick bricks[21];
+Brick bricks[15];
 Brick *brptr = bricks;
 int numBricks;
 int bricksSize;

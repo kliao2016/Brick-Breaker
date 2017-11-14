@@ -32,6 +32,7 @@ typedef struct {
     int col;
     int oldRow;
     int oldCol;
+    int cdel;
     unsigned short color;
 
 } Slider;

@@ -15,6 +15,7 @@ void drawSlider(Slider *sldptr) {
     sldptr->col = (SCREENWIDTH / 2) - 1 - (sldptr->width / 2);
     sldptr->oldRow = sldptr->row;
     sldptr->oldCol = sldptr->col;
+    sldptr->cdel = 2;
     drawImage3(sldptr->row, sldptr->col, sldptr->height, sldptr->width, slider_image);
 }
 
@@ -25,10 +26,15 @@ void drawSlider(Slider *sldptr) {
  */
 void enableSlider(Slider *sldptr) {
 
-    int cdel = 2;
+    int cdel = sldptr->cdel;
     const int height = sldptr->height;
 
     if (KEY_DOWN_NOW(BUTTON_RIGHT)) {
+
+        if (sldptr->cdel < 0) {
+            sldptr->cdel *= -1;
+        }
+
         // Get the width of the slider
         int width = sldptr->width;
 
@@ -45,6 +51,11 @@ void enableSlider(Slider *sldptr) {
     }
 
     if (KEY_DOWN_NOW(BUTTON_LEFT)) {
+
+        if (sldptr->cdel > 0) {
+            sldptr->cdel *= -1;
+        }
+
         // Get the width of the slider
         int width = sldptr->width;
 
@@ -53,7 +64,7 @@ void enableSlider(Slider *sldptr) {
         sldptr->oldRow = sldptr->row;
         sldptr->oldCol = sldptr->col;
 
-        sldptr->col = sldptr->col - cdel;
+        sldptr->col = sldptr->col + cdel;
         if (sldptr->col < 0) {
             sldptr->col = 0;
         }
@@ -131,10 +142,21 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
             && ballptr->col >= (sldptr->col - BALLSIZE)
             && ballptr->col <= (sldptr->col + SLIDER_WIDTH)) {
         ballptr->row = sldptr->row - BALLSIZE;
-        ballptr->yDir = ballptr->yDir / ballptr->yDir * -1;
-        int dirFactor = (rand() % 3) - 1;
-        if (dirFactor != 0) {
-            ballptr->xDir = (ballptr->xDir / abs(ballptr->xDir)) * dirFactor;
+        ballptr->yDir *= -1;
+        if (ballptr->xDir > 0 && sldptr->cdel > 0) {
+            ballptr->xDir += 1;
+        } else if (ballptr->xDir < 0 && sldptr->cdel > 0) {
+            ballptr->xDir += 1;
+            if (ballptr->xDir == 0) {
+                ballptr->xDir = -1;
+            }
+        } else if (ballptr->xDir > 0 && sldptr->cdel < 0) {
+            ballptr->xDir -= 1;
+            if (ballptr->xDir == 0) {
+                ballptr->xDir = 1;
+            }
+        } else {
+            ballptr->xDir -= 1;
         }
     }
 
@@ -186,7 +208,6 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 brptr[j] = brptr[j + 1];
             }
             bricksSize = *(numBricks);
-            i--;
         } else {
             if (((ballptr->col == (cur->col + BRICKWIDTH))
                     || ((ballptr->col + BALLSIZE) == cur->col))
@@ -195,8 +216,13 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 *(numBricks) -= 1;
                 cur->isHit = 1;
                 ballptr->xDir *= -1;
-                ballptr->xDir = ((rand() % 2) + 1) * ballptr->xDir / abs(ballptr->xDir);
-                ballptr->yDir = ((rand() % 2) + 1) * ballptr->yDir / abs(ballptr->yDir);
+                ballptr->yDir *= ((rand() % 3) - 1);
+                if (ballptr->yDir == 0) {
+                    ballptr->yDir = 1;
+                }
+                ballptr->col += ballptr->xDir;
+                ballptr->row += ballptr->yDir;
+                i = 0;
             } else if ((((ballptr->row + BALLSIZE) == cur->row)
                         || (ballptr->row == (cur->row + BRICKHEIGHT)))
                         && ((ballptr->col >= (cur->col - BALLSIZE))
@@ -204,8 +230,13 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 *(numBricks) -= 1;
                 cur->isHit = 1;
                 ballptr->yDir *= -1;
-                ballptr->xDir = ((rand() % 2) + 1) * ballptr->xDir / abs(ballptr->xDir);
-                ballptr->yDir = ((rand() % 2) + 1) * ballptr->yDir / abs(ballptr->yDir);
+                ballptr->xDir *= ((rand() % 3) - 1);
+                if (ballptr->xDir == 0) {
+                    ballptr->xDir = 1;
+                }
+                ballptr->row += ballptr->yDir;
+                ballptr->col += ballptr->xDir;
+                i = 0;
             }
             drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, cur->color);
         }
