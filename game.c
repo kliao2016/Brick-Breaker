@@ -144,19 +144,13 @@ void handleCollisions(Ball *ballptr, Slider *sldptr) {
         ballptr->row = sldptr->row - BALLSIZE;
         ballptr->yDir *= -1;
         if (ballptr->xDir > 0 && sldptr->cdel > 0) {
-            ballptr->xDir += 1;
+            ballptr->xDir = 1;
         } else if (ballptr->xDir < 0 && sldptr->cdel > 0) {
-            ballptr->xDir += 1;
-            if (ballptr->xDir == 0) {
-                ballptr->xDir = -1;
-            }
+            ballptr->xDir = 1;
         } else if (ballptr->xDir > 0 && sldptr->cdel < 0) {
-            ballptr->xDir -= 1;
-            if (ballptr->xDir == 0) {
-                ballptr->xDir = 1;
-            }
+            ballptr->xDir = -1;
         } else {
-            ballptr->xDir -= 1;
+            ballptr->xDir = -1;
         }
     }
 
@@ -208,6 +202,7 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 brptr[j] = brptr[j + 1];
             }
             bricksSize = *(numBricks);
+            i--;
         } else {
             if (((ballptr->col == (cur->col + BRICKWIDTH))
                     || ((ballptr->col + BALLSIZE) == cur->col))
@@ -222,7 +217,6 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 }
                 ballptr->col += ballptr->xDir;
                 ballptr->row += ballptr->yDir;
-                i = 0;
             } else if ((((ballptr->row + BALLSIZE) == cur->row)
                         || (ballptr->row == (cur->row + BRICKHEIGHT)))
                         && ((ballptr->col >= (cur->col - BALLSIZE))
@@ -236,7 +230,6 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
                 }
                 ballptr->row += ballptr->yDir;
                 ballptr->col += ballptr->xDir;
-                i = 0;
             }
             drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, cur->color);
         }
