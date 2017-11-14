@@ -81,8 +81,11 @@ void enableSlider(Slider *sldptr) {
  * @param ballptr the pointer to the ball to move
  */
 void createBall(int row, int col, int size, Ball *ballptr) {
-    ballptr->xDir = 1;
-    ballptr->yDir = -1;
+    ballptr->xDir = (rand() % 3) - 1;
+    if (ballptr->xDir == 0) {
+        ballptr->xDir = -1;
+    }
+    ballptr->yDir = 1;
     ballptr->row = row;
     ballptr->col = col;
     ballptr->oldRow = ballptr->row;
@@ -198,7 +201,7 @@ void handleBrickCollisions(Brick *brptr, Ball *ballptr, int *numBricks, int bric
         Brick *cur = brptr + i;
         if (cur->isHit) {
             drawRect(cur->row, cur->col, BRICKHEIGHT, BRICKWIDTH, BGCOLOR);
-            for (int j = i; j < bricksSize - 1; j++) {
+            for (int j = i; j < bricksSize; j++) {
                 brptr[j] = brptr[j + 1];
             }
             bricksSize = *(numBricks);
