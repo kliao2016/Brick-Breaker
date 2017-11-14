@@ -125,18 +125,18 @@ void ballMovement(Ball *ballptr, Slider *sldptr, Brick *brptr, int *numBricks, i
  */
 void handleCollisions(Ball *ballptr, Slider *sldptr) {
 
-    if (ballptr->col < 0) {
+    if (ballptr->col <= 0) {
         ballptr->col = 0;
         ballptr->xDir *= -1;
     }
 
-    if (ballptr->row < 0) {
+    if (ballptr->row <= 0) {
         ballptr->row = 0;
         ballptr->yDir *= -1;
     }
 
-    if (ballptr->col + BALLSIZE > SCREENWIDTH) {
-        ballptr->col = SCREENWIDTH - BALLSIZE;
+    if (ballptr->col + BALLSIZE >= SCREENWIDTH) {
+        ballptr->col = SCREENWIDTH - BALLSIZE - 1;
         ballptr->xDir *= -1;
     }
 
